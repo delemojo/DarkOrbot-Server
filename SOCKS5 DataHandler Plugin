@@ -1,0 +1,45 @@
+    class Class1 : socks5.Plugin.DataHandler
+    {
+        public override bool Enabled
+        {
+            get
+            {
+                return bool_0;
+            }
+
+            set
+            {
+                bool_0 = Enabled;
+            }
+        }
+
+        public override void OnClientDataReceived(object sender, DataEventArgs e)
+        {
+            byte[] array = new byte[e.Count];
+            Array.Copy(e.Buffer, array, e.Count);
+            e.Buffer = (new byte[array.Length]);
+            e.Buffer = (array);
+            Console.WriteLine("Recieved Client data --> Buffer: " + e.Buffer + " Offset:" + e.Offset + " Length:" + e.Buffer.Length);
+        }
+
+        public override void OnServerDataReceived(object sender, DataEventArgs e)
+        {
+            Client.IP = e.Request.IP.ToString();
+            Client.PORT = e.Request.Port;
+            try
+            {
+                byte[] array = new byte[e.Count];
+                Array.Copy(e.Buffer, array, e.Count);
+                e.Buffer = (new byte[array.Length]);
+                e.Buffer = (array);
+                Client.Send(e.Buffer, e.Offset, e.Buffer.Length);
+                Console.Write("Buffer: " + e.Buffer + " Offset:" + e.Offset + " Length:" + e.Buffer.Length + " From: " + e.Request.IP + ":" + e.Request.Port + Environment.NewLine);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in writing Client Stream --> " + ex);
+            }
+        }
+
+        private bool bool_0 = true;
+    }

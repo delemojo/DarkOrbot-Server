@@ -20,11 +20,6 @@
             clientStream = Client.client.GetStream();
             reader = new EndianBinaryReader(EndianBitConverter.Big, clientStream);
             writer = new EndianBinaryWriter(EndianBitConverter.Big, clientStream);
-            Task task1 = new Task(delegate
-            {
-                listen();
-            });
-            task1.Start();
         }
         
         public static void Send(byte[] Buffer, int Offset, int Count)

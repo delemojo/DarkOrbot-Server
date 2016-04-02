@@ -1,0 +1,35 @@
+   public class Client
+    {
+        public static TcpClient client;
+        public static Socket awayClient;
+        public static NetworkStream clientStream;
+        public static EndianBinaryReader reader;
+        public static EndianBinaryWriter writer;
+
+        public static int recieved;
+
+        public Client()
+        {           
+        }
+
+        public void startClient(TcpClient client)
+        {
+            Client.client = client;
+            Client.awayClient = new Socket(SocketType.Stream, ProtocolType.Tcp);
+            Console.WriteLine("Client added");
+            clientStream = Client.client.GetStream();
+            reader = new EndianBinaryReader(EndianBitConverter.Big, clientStream);
+            writer = new EndianBinaryWriter(EndianBitConverter.Big, clientStream);
+            Task task1 = new Task(delegate
+            {
+                listen();
+            });
+            task1.Start();
+        }
+        
+        public static void Send(byte[] Buffer, int Offset, int Count)
+        {
+            if (Buffer.Length.Equals(8)) Client.recieved--;
+            clientStream.Write(Buffer, Offset, Count);
+            clientStream.Flush();
+        }
